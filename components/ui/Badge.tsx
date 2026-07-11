@@ -2,6 +2,7 @@
 
 import { forwardRef, HTMLAttributes } from 'react';
 import { cn } from '@/lib/utils';
+import { Home, FileText, Package, MapPin, HeartPulse, MessageSquare } from 'lucide-react';
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   variant?: 'default' | 'critical' | 'high' | 'medium' | 'low' | 'completed' | 'info' | 'warning' | 'success' | 'destructive' | 'secondary';
@@ -12,17 +13,17 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
   ({ className, variant = 'default', size = 'md', dot = false, children, ...props }, ref) => {
     const variants = {
-      default: 'bg-gray-100 text-gray-700 border-gray-200 dark:bg-storm-800 dark:text-cloud-200 dark:border-storm-700',
-      critical: 'bg-danger-50 text-danger-700 border-danger-200 dark:bg-danger-900/30 dark:text-danger-300 dark:border-danger-800/50',
-      high: 'bg-caution-50 text-caution-700 border-caution-200 dark:bg-caution-900/30 dark:text-caution-300 dark:border-caution-800/50',
-      medium: 'bg-water-50 text-water-700 border-water-200 dark:bg-water-900/30 dark:text-water-300 dark:border-water-800/50',
-      low: 'bg-safe-50 text-safe-700 border-safe-200 dark:bg-safe-900/30 dark:text-safe-300 dark:border-safe-800/50',
-      completed: 'bg-safe-50 text-safe-700 border-safe-200 dark:bg-safe-900/30 dark:text-safe-300 dark:border-safe-800/50',
-      info: 'bg-water-50 text-water-700 border-water-200 dark:bg-water-900/30 dark:text-water-300 dark:border-water-800/50',
-      warning: 'bg-caution-50 text-caution-700 border-caution-200 dark:bg-caution-900/30 dark:text-caution-300 dark:border-caution-800/50',
-      success: 'bg-safe-50 text-safe-700 border-safe-200 dark:bg-safe-900/30 dark:text-safe-300 dark:border-safe-800/50',
-      destructive: 'bg-danger-50 text-danger-700 border-danger-200 dark:bg-danger-900/30 dark:text-danger-300 dark:border-danger-800/50',
-      secondary: 'bg-safe-50 text-safe-700 border-safe-200 dark:bg-safe-900/30 dark:text-safe-300 dark:border-safe-800/50',
+      default: 'bg-surface text-foreground border-border dark:bg-ctp-mocha-surface1 dark:text-ctp-mocha-text dark:border-ctp-mocha-surface0',
+      critical: 'bg-danger-100 text-danger-700 border-danger-200 dark:bg-danger-900/40 dark:text-danger-300 dark:border-danger-800/50',
+      high: 'bg-warning-100 text-warning-700 border-warning-200 dark:bg-warning-900/40 dark:text-warning-300 dark:border-warning-800/50',
+      medium: 'bg-info-100 text-info-700 border-info-200 dark:bg-info-900/40 dark:text-info-300 dark:border-info-800/50',
+      low: 'bg-success-100 text-success-700 border-success-200 dark:bg-success-900/40 dark:text-success-300 dark:border-success-800/50',
+      completed: 'bg-success-100 text-success-700 border-success-200 dark:bg-success-900/40 dark:text-success-300 dark:border-success-800/50',
+      info: 'bg-info-100 text-info-700 border-info-200 dark:bg-info-900/40 dark:text-info-300 dark:border-info-800/50',
+      warning: 'bg-warning-100 text-warning-700 border-warning-200 dark:bg-warning-900/40 dark:text-warning-300 dark:border-warning-800/50',
+      success: 'bg-success-100 text-success-700 border-success-200 dark:bg-success-900/40 dark:text-success-300 dark:border-success-800/50',
+      destructive: 'bg-danger-100 text-danger-700 border-danger-200 dark:bg-danger-900/40 dark:text-danger-300 dark:border-danger-800/50',
+      secondary: 'bg-success-100 text-success-700 border-success-200 dark:bg-success-900/40 dark:text-success-300 dark:border-success-800/50',
     };
 
     const sizes = {
@@ -31,17 +32,17 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
     };
 
     const dotColors = {
-      default: 'bg-gray-400',
+      default: 'bg-surface dark:bg-ctp-mocha-surface1',
       critical: 'bg-danger-500',
-      high: 'bg-mumbai-caution-500',
-      medium: 'bg-water-500',
-      low: 'bg-safe-500',
-      completed: 'bg-safe-500',
-      info: 'bg-water-500',
-      warning: 'bg-mumbai-caution-500',
-      success: 'bg-safe-500',
+      high: 'bg-warning-500',
+      medium: 'bg-info-500',
+      low: 'bg-success-500',
+      completed: 'bg-success-500',
+      info: 'bg-info-500',
+      warning: 'bg-warning-500',
+      success: 'bg-success-500',
       destructive: 'bg-danger-500',
-      secondary: 'bg-safe-500',
+      secondary: 'bg-success-500',
     };
 
     return (
@@ -148,5 +149,3 @@ export function CategoryBadge({ category, size = 'md' }: CategoryBadgeProps) {
     </Badge>
   );
 }
-
-import { Home, FileText, Package, MapPin, HeartPulse, MessageSquare } from 'lucide-react';

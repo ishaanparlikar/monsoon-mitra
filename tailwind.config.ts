@@ -10,7 +10,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Catppuccin Latte (Light Theme) - Full scales
+        // Catppuccin Latte (Light Theme) - Full palette
         'ctp-latte': {
           rosewater: '#dc8a78',
           flamingo: '#dd7878',
@@ -39,7 +39,7 @@ const config: Config = {
           mantle: '#e6e9ef',
           crust: '#dce0e8',
         },
-        // Catppuccin Mocha (Dark Theme) - Full scales
+        // Catppuccin Mocha (Dark Theme) - Full palette
         'ctp-mocha': {
           rosewater: '#f5e0dc',
           flamingo: '#f2cdcd',
@@ -68,76 +68,22 @@ const config: Config = {
           mantle: '#181825',
           crust: '#11111b',
         },
-        // Semantic color scales for Badge/UI components
-        danger: {
-          50: 'color-mix(in oklab, var(--ctp-red) 10%, white)',
-          100: 'color-mix(in oklab, var(--ctp-red) 20%, white)',
-          200: 'color-mix(in oklab, var(--ctp-red) 30%, white)',
-          300: 'color-mix(in oklab, var(--ctp-red) 40%, white)',
-          400: 'color-mix(in oklab, var(--ctp-red) 50%, white)',
-          500: 'var(--ctp-red)',
-          600: 'color-mix(in oklab, var(--ctp-red) 85%, black)',
-          700: 'color-mix(in oklab, var(--ctp-red) 70%, black)',
-          800: 'color-mix(in oklab, var(--ctp-red) 60%, black)',
-          900: 'color-mix(in oklab, var(--ctp-red) 50%, black)',
-        },
-        warning: {
-          50: 'color-mix(in oklab, var(--ctp-yellow) 10%, white)',
-          100: 'color-mix(in oklab, var(--ctp-yellow) 20%, white)',
-          200: 'color-mix(in oklab, var(--ctp-yellow) 30%, white)',
-          300: 'color-mix(in oklab, var(--ctp-yellow) 40%, white)',
-          400: 'color-mix(in oklab, var(--ctp-yellow) 50%, white)',
-          500: 'var(--ctp-yellow)',
-          600: 'color-mix(in oklab, var(--ctp-yellow) 85%, black)',
-          700: 'color-mix(in oklab, var(--ctp-yellow) 70%, black)',
-          800: 'color-mix(in oklab, var(--ctp-yellow) 60%, black)',
-          900: 'color-mix(in oklab, var(--ctp-yellow) 50%, black)',
-        },
-        success: {
-          50: 'color-mix(in oklab, var(--ctp-green) 10%, white)',
-          100: 'color-mix(in oklab, var(--ctp-green) 20%, white)',
-          200: 'color-mix(in oklab, var(--ctp-green) 30%, white)',
-          300: 'color-mix(in oklab, var(--ctp-green) 40%, white)',
-          400: 'color-mix(in oklab, var(--ctp-green) 50%, white)',
-          500: 'var(--ctp-green)',
-          600: 'color-mix(in oklab, var(--ctp-green) 85%, black)',
-          700: 'color-mix(in oklab, var(--ctp-green) 70%, black)',
-          800: 'color-mix(in oklab, var(--ctp-green) 60%, black)',
-          900: 'color-mix(in oklab, var(--ctp-green) 50%, black)',
-        },
-        info: {
-          50: 'color-mix(in oklab, var(--ctp-sky) 10%, white)',
-          100: 'color-mix(in oklab, var(--ctp-sky) 20%, white)',
-          200: 'color-mix(in oklab, var(--ctp-sky) 30%, white)',
-          300: 'color-mix(in oklab, var(--ctp-sky) 40%, white)',
-          400: 'color-mix(in oklab, var(--ctp-sky) 50%, white)',
-          500: 'var(--ctp-sky)',
-          600: 'color-mix(in oklab, var(--ctp-sky) 85%, black)',
-          700: 'color-mix(in oklab, var(--ctp-sky) 70%, black)',
-          800: 'color-mix(in oklab, var(--ctp-sky) 60%, black)',
-          900: 'color-mix(in oklab, var(--ctp-sky) 50%, black)',
-        },
-        // Primary button/brand color
-        primary: {
-          DEFAULT: 'var(--ctp-blue)',
-          foreground: '#ffffff',
-          hover: 'var(--ctp-sapphire)',
-        },
-        secondary: {
-          DEFAULT: 'var(--ctp-green)',
-          foreground: '#ffffff',
-          hover: '#328f20',
-        },
-        // Surface colors using Catppuccin
-        surface: {
-          DEFAULT: 'var(--ctp-surface0)',
-          elevated: 'var(--ctp-base)',
-          overlay: 'var(--ctp-surface2)',
-        },
-        muted: {
-          DEFAULT: 'var(--ctp-subtext0)',
-          foreground: 'var(--ctp-text)',
-        },
+        // Semantic colors - Latte values for light, Mocha for dark
+        // These need dark: variants in CSS for proper dark mode
+        background: '#eff1f5',
+        foreground: '#4c4f69',
+        border: '#ccd0da',
+        'border-strong': '#acb0be',
+        surface: '#ccd0da',
+        'surface-elevated': '#eff1f5',
+        muted: '#9ca0b0',
+        primary: '#1e66f5',
+        secondary: '#40a02b',
+        danger: '#d20f39',
+        warning: '#df8e1d',
+        success: '#40a02b',
+        info: '#04a5e5',
+        ring: '#1e66f5',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],

@@ -21,13 +21,13 @@ const typeIcon: Record<string, React.ReactNode> = {
 
 function amenityColors(amenity: string) {
   const map: Record<string, string> = {
-    Water: 'bg-water-100 text-water-700',
-    Food: 'bg-safe-100 text-safe-700',
-    Medical: 'bg-danger-100 text-danger-700',
-    Toilets: 'bg-cloud-100 text-cloud-700',
-    'Special Needs': 'bg-mumbai-caution-100 text-mumbai-caution-700',
+    Water: 'bg-info-100 text-info-700 dark:bg-info-900/40 dark:text-info-300',
+    Food: 'bg-success-100 text-success-700 dark:bg-success-900/40 dark:text-success-300',
+    Medical: 'bg-danger-100 text-danger-700 dark:bg-danger-900/40 dark:text-danger-300',
+    Toilets: 'bg-surface text-foreground dark:bg-ctp-mocha-surface1 dark:text-ctp-mocha-text',
+    'Special Needs': 'bg-warning-100 text-warning-700 dark:bg-warning-900/40 dark:text-warning-300',
   };
-  return map[amenity] || 'bg-cloud-100 text-cloud-700';
+  return map[amenity] || 'bg-surface text-foreground';
 }
 
 function getShelterType(name: string): string {
@@ -83,16 +83,16 @@ export function SheltersUI({ familyId }: SheltersUIProps) {
   }, [familyId]);
 
   return (
-    <div className="min-h-screen bg-paper-dry pb-32 safe-all">
-      <header className="sticky top-0 z-40 bg-paper-dry border-b border-cloud-200 shadow-cloud-shadow safe-top">
+    <div className="min-h-screen bg-background pb-32 safe-all">
+      <header className="sticky top-0 z-40 bg-background border-b border-border shadow-cloud-shadow safe-top">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-water-600 flex items-center justify-center">
-              <MapPin className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 rounded-xl bg-info flex items-center justify-center">
+              <MapPin className="w-5 h-5 text-info-foreground" />
             </div>
             <div>
-              <h1 className="font-semibold text-storm-900 text-lg leading-none">Nearby Shelters</h1>
-              <p className="text-xs text-cloud-500 mt-0.5">
+              <h1 className="font-semibold text-foreground text-lg leading-none">Nearby Shelters</h1>
+              <p className="text-xs text-muted mt-0.5">
                 {loading ? 'Locating shelters...' : `${shelters.length} locations active`}
               </p>
             </div>
@@ -102,9 +102,9 @@ export function SheltersUI({ familyId }: SheltersUIProps) {
 
       <main className="px-4 py-4 space-y-3 pb-28">
         {/* Info banner */}
-        <div className="flex items-start gap-3 bg-water-50 border border-water-200 rounded-2xl p-3">
-          <Navigation className="w-4 h-4 text-water-600 mt-0.5 flex-shrink-0" />
-          <p className="text-xs text-water-800">
+        <div className="flex items-start gap-3 bg-info-100/50 border border-info-200 rounded-2xl p-3 dark:bg-info-900/20 dark:border-info-800/50">
+          <Navigation className="w-4 h-4 text-info mt-0.5 flex-shrink-0" />
+          <p className="text-xs text-foreground">
             These are pre-designated emergency shelters maintained by authorities for active monsoons. Please check capacity and directions before travelling.
           </p>
         </div>
@@ -112,13 +112,13 @@ export function SheltersUI({ familyId }: SheltersUIProps) {
         {loading && (
           <div className="space-y-3">
             {[1, 2, 3].map((n) => (
-              <Card key={n} className="border-cloud-200 animate-pulse">
+              <Card key={n} className="border-border animate-pulse">
                 <CardContent className="p-4 flex gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-cloud-100 flex-shrink-0" />
+                  <div className="w-10 h-10 rounded-xl bg-surface flex-shrink-0" />
                   <div className="flex-1 space-y-2">
-                    <div className="h-4 bg-cloud-100 rounded w-2/3" />
-                    <div className="h-3 bg-cloud-100 rounded w-1/2" />
-                    <div className="h-3 bg-cloud-100 rounded w-1/3 mt-2" />
+                    <div className="h-4 bg-surface rounded w-2/3" />
+                    <div className="h-3 bg-surface rounded w-1/2" />
+                    <div className="h-3 bg-surface rounded w-1/3 mt-2" />
                   </div>
                 </CardContent>
               </Card>
@@ -128,16 +128,16 @@ export function SheltersUI({ familyId }: SheltersUIProps) {
 
         {!loading && error && (
           <div className="text-center py-8">
-            <p className="text-sm text-danger-600 mb-2">{error}</p>
+            <p className="text-sm text-danger mb-2">{error}</p>
             <Button size="sm" onClick={() => window.location.reload()}>Retry</Button>
           </div>
         )}
 
         {!loading && !error && shelters.length === 0 && (
-          <div className="text-center py-10 bg-cloud-50 border border-dashed border-cloud-200 rounded-2xl px-4">
-            <MapPin className="w-8 h-8 text-cloud-300 mx-auto mb-2" />
-            <p className="text-sm text-storm-600 font-medium">No shelters found nearby</p>
-            <p className="text-xs text-cloud-500 mt-1">If your family location is not set, we cannot locate nearby shelters.</p>
+          <div className="text-center py-10 bg-surface/50 border border-dashed border-border rounded-2xl px-4">
+            <MapPin className="w-8 h-8 text-muted mx-auto mb-2" />
+            <p className="text-sm text-foreground font-medium">No shelters found nearby</p>
+            <p className="text-xs text-muted mt-1">If your family location is not set, we cannot locate nearby shelters.</p>
           </div>
         )}
 
@@ -148,28 +148,28 @@ export function SheltersUI({ familyId }: SheltersUIProps) {
           const distanceStr = shelter.distanceKm !== null && shelter.distanceKm !== undefined
             ? `${shelter.distanceKm} km`
             : 'Near you';
-          const phone = '1078'; // fallback helpline
+          const phone = '1078';
 
           return (
             <Card
               key={shelter.id}
-              className={`overflow-hidden transition-all duration-200 cursor-pointer ${isSelected ? 'border-water-400 shadow-medium' : 'border-cloud-200'}`}
+              className={`overflow-hidden transition-all duration-200 cursor-pointer ${isSelected ? 'border-info shadow-medium' : 'border-border'}`}
               onClick={() => setSelected(isSelected ? null : shelter.id)}
             >
               <CardContent className="p-0">
                 <div className="p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-start gap-3 flex-1 min-w-0">
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${isSelected ? 'bg-water-100 text-water-600' : 'bg-cloud-100 text-cloud-600'}`}>
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${isSelected ? 'bg-info-100 text-info dark:bg-info-900/40' : 'bg-surface text-muted'}`}>
                         {typeIcon[shelterType] || <MapPin className="w-4 h-4" />}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-storm-900 text-sm leading-snug">{shelter.name}</h3>
-                        <p className="text-xs text-cloud-500 mt-0.5 line-clamp-1">{shelter.address}</p>
+                        <h3 className="font-semibold text-foreground text-sm leading-snug">{shelter.name}</h3>
+                        <p className="text-xs text-muted mt-0.5 line-clamp-1">{shelter.address}</p>
                         <div className="flex items-center gap-3 mt-2">
-                          <span className="text-xs text-water-600 font-medium">{distanceStr}</span>
-                          <span className="text-cloud-300">·</span>
-                          <span className="text-xs text-cloud-500 flex items-center gap-1">
+                          <span className="text-xs text-info font-medium">{distanceStr}</span>
+                          <span className="text-muted">·</span>
+                          <span className="text-xs text-muted flex items-center gap-1">
                             <Users className="w-3 h-3" />
                             Cap. {shelter.capacity} ({shelter.current_occupancy} occupied)
                           </span>
@@ -190,7 +190,7 @@ export function SheltersUI({ familyId }: SheltersUIProps) {
                 </div>
 
                 {isSelected && (
-                  <div className="border-t border-cloud-100 p-4 bg-cloud-50 space-y-3 animate-in">
+                  <div className="border-t border-border p-4 bg-surface/50 space-y-3 animate-in">
                     <div className="grid grid-cols-2 gap-2">
                       <Button
                         variant="primary"
@@ -217,7 +217,7 @@ export function SheltersUI({ familyId }: SheltersUIProps) {
                         Call Help
                       </Button>
                     </div>
-                    <p className="text-xs text-cloud-500">
+                    <p className="text-xs text-muted">
                       Tap "Get Directions" to open Google Maps with step-by-step route directions from your location.
                     </p>
                   </div>
@@ -228,10 +228,10 @@ export function SheltersUI({ familyId }: SheltersUIProps) {
         })}
 
         {/* Emergency note */}
-        <Card className="border-danger-200 bg-danger-50">
+        <Card className="border-danger bg-danger-50/50 dark:bg-danger-900/20">
           <CardContent className="p-4">
-            <p className="text-xs font-semibold text-danger-700 mb-1">Immediate Emergency?</p>
-            <p className="text-xs text-danger-600 mb-3">Call NDMA Helpline before travelling to a shelter to confirm availability.</p>
+            <p className="text-xs font-semibold text-danger mb-1">Immediate Emergency?</p>
+            <p className="text-xs text-danger/80 mb-3">Call NDMA Helpline before travelling to a shelter to confirm availability.</p>
             <a href="tel:1078">
               <Button variant="destructive" size="sm" fullWidth leftIcon={<Phone className="w-4 h-4" />}>
                 Call 1078 — NDMA Helpline

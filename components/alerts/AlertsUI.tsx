@@ -7,27 +7,27 @@ import { Badge } from '@/components/ui/Badge';
 
 const severityConfig = {
   warning: {
-    bg: 'bg-danger-50',
+    bg: 'bg-danger-100/50',
     border: 'border-danger-200',
     icon: AlertTriangle,
     label: 'RED ALERT',
-    iconColor: 'text-danger-500',
+    iconColor: 'text-danger',
     badgeVariant: 'critical' as const,
   },
   alert: {
-    bg: 'bg-mumbai-caution-50',
-    border: 'border-mumbai-caution-200',
+    bg: 'bg-warning-100/50',
+    border: 'border-warning-200',
     icon: AlertCircle,
     label: 'ORANGE ALERT',
-    iconColor: 'text-mumbai-caution-500',
+    iconColor: 'text-warning',
     badgeVariant: 'warning' as const,
   },
   watch: {
-    bg: 'bg-water-50',
-    border: 'border-water-200',
+    bg: 'bg-info-100/50',
+    border: 'border-info-200',
     icon: Info,
     label: 'YELLOW WATCH',
-    iconColor: 'text-water-500',
+    iconColor: 'text-info',
     badgeVariant: 'info' as const,
   },
 };
@@ -42,11 +42,11 @@ export function AlertsUI({ alerts }: AlertsUIProps) {
   if (alerts.length === 0) {
     return (
       <Card variant="shelter" className="text-center py-8">
-        <div className="w-12 h-12 rounded-full bg-safe-100 flex items-center justify-center mx-auto mb-3">
-          <Info className="w-6 h-6 text-safe-500" aria-hidden="true" />
+        <div className="w-12 h-12 rounded-full bg-success/10 flex items-center justify-center mx-auto mb-3">
+          <Info className="w-6 h-6 text-success" aria-hidden="true" />
         </div>
-        <h3 className="font-semibold text-storm-800 mb-1">No Active Alerts</h3>
-        <p className="text-sm text-cloud-600">No weather alerts for your district at this time.</p>
+        <h3 className="font-semibold text-foreground mb-1">No Active Alerts</h3>
+        <p className="text-sm text-muted">No weather alerts for your district at this time.</p>
       </Card>
     );
   }
@@ -56,7 +56,7 @@ export function AlertsUI({ alerts }: AlertsUIProps) {
   if (visibleAlerts.length === 0) {
     return (
       <Card variant="elevated" className="text-center py-6">
-        <p className="text-sm text-cloud-600">All alerts dismissed. Pull to refresh.</p>
+        <p className="text-sm text-muted">All alerts dismissed. Pull to refresh.</p>
       </Card>
     );
   }
@@ -73,14 +73,14 @@ export function AlertsUI({ alerts }: AlertsUIProps) {
             variant="elevated"
             className={`${config.bg} ${config.border} border transition-all duration-300 relative overflow-hidden`}
           >
-            <div className="absolute left-0 top-0 bottom-0 w-1 bg-current opacity-50" style={{ backgroundColor: config.iconColor }} />
+            <div className="absolute left-0 top-0 bottom-0 w-1 bg-current opacity-50" style={{ backgroundColor: `var(--ctp-${alert.severity === 'warning' ? 'red' : alert.severity === 'alert' ? 'yellow' : 'sky'})` }} />
 
             <button
               onClick={() => setDismissed(prev => new Set(prev).add(alert.id))}
-              className="absolute top-2 right-2 w-6 h-6 rounded-full hover:bg-black/10 flex items-center justify-center transition-colors"
+              className="absolute top-2 right-2 w-6 h-6 rounded-full hover:bg-surface flex items-center justify-center transition-colors"
               aria-label="Dismiss alert"
             >
-              <X className="w-4 h-4 text-cloud-500" />
+              <X className="w-4 h-4 text-muted" />
             </button>
 
             <CardContent className="p-4">
@@ -94,26 +94,26 @@ export function AlertsUI({ alerts }: AlertsUIProps) {
                       {config.label}
                     </Badge>
                   </div>
-                  <p className="text-sm text-storm-800 leading-relaxed mb-2">
-                    <strong className="text-storm-900 font-medium">{alert.title}</strong>{' '}
+                  <p className="text-sm text-foreground leading-relaxed mb-2">
+                    <strong className="text-foreground font-medium">{alert.title}</strong>{' '}
                     {alert.description}
                   </p>
-                  <div className="flex items-center justify-center bg-white/40 hover:bg-white/60 transition duration-200 rounded-full py-1.5 px-4 w-[110px]">
-                    <span className="text-xs font-medium text-storm-700">View Details</span>
+                  <div className="flex items-center justify-center bg-surface/50 hover:bg-surface transition duration-200 rounded-full py-1.5 px-4 w-[110px]">
+                    <span className="text-xs font-medium text-foreground">View Details</span>
                   </div>
-                  <div className="mt-3 pt-3 border-t border-white/20 space-y-2">
+                  <div className="mt-3 pt-3 border-t border-border/50 space-y-2">
                     <div>
-                      <h4 className="font-medium text-storm-800 mb-1.5 text-sm uppercase tracking-wider">Official Instruction</h4>
-                      <p className="text-sm text-cloud-600 leading-relaxed">{alert.instruction}</p>
+                      <h4 className="font-medium text-foreground mb-1.5 text-sm uppercase tracking-wider">Official Instruction</h4>
+                      <p className="text-sm text-muted leading-relaxed">{alert.instruction}</p>
                     </div>
-                    <div className="pt-3 border-t border-white/10">
+                    <div className="pt-3 border-t border-border/30">
                       <div className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-cloud-500" />
-                        <span className="text-xs text-cloud-600">Affected: {alert.districts?.join(', ')}</span>
+                        <MapPin className="w-4 h-4 text-muted" />
+                        <span className="text-xs text-muted">Affected: {alert.districts?.join(', ')}</span>
                       </div>
                       <div className="flex items-center gap-2 mt-2">
-                        <Clock className="w-4 h-4 text-cloud-500" />
-                        <span className="text-xs text-cloud-600">Valid until {new Date(alert.valid_until).toLocaleTimeString()}</span>
+                        <Clock className="w-4 h-4 text-muted" />
+                        <span className="text-xs text-muted">Valid until {new Date(alert.valid_until).toLocaleTimeString()}</span>
                       </div>
                     </div>
                   </div>

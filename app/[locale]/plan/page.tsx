@@ -17,10 +17,10 @@ const categoryConfig: Record<string, { icon: any; label: string }> = {
 };
 
 const priorityConfig: Record<string, { color: string; label: string }> = {
-  critical: { color: 'bg-red-100 text-red-800', label: 'Critical' },
-  high: { color: 'bg-orange-100 text-orange-800', label: 'High' },
-  medium: { color: 'bg-yellow-100 text-yellow-800', label: 'Medium' },
-  low: { color: 'bg-green-100 text-green-800', label: 'Low' },
+  critical: { color: 'bg-danger-100 text-danger-700 dark:bg-danger-900/40 dark:text-danger-300', label: 'Critical' },
+  high: { color: 'bg-warning-100 text-warning-700 dark:bg-warning-900/40 dark:text-warning-300', label: 'High' },
+  medium: { color: 'bg-info-100 text-info-700 dark:bg-info-900/40 dark:text-info-300', label: 'Medium' },
+  low: { color: 'bg-success-100 text-success-700 dark:bg-success-900/40 dark:text-success-300', label: 'Low' },
 };
 
 const mockChecklist = [
@@ -66,15 +66,15 @@ export default function PlanPage() {
   const categories = Array.from(new Set(mockChecklist.map(item => item.category)));
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-32 safe-area-insets">
+    <div className="min-h-screen bg-background pb-32 safe-all">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-white border-b border-slate-200 safe-top">
+      <header className="sticky top-0 z-40 bg-background border-b border-border safe-top">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-primary-600 flex items-center justify-center">
-              <Shield className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center">
+              <Shield className="w-5 h-5 text-primary-foreground" />
             </div>
-            <h1 className="font-semibold text-slate-900 text-lg">My Preparedness Plan</h1>
+            <h1 className="font-semibold text-foreground text-lg">My Preparedness Plan</h1>
           </div>
         </div>
 
@@ -86,8 +86,8 @@ export default function PlanPage() {
               onClick={() => setPhase(p)}
               className={`flex-shrink-0 px-4 py-2 rounded-xl text-sm font-medium transition-colors whitespace-nowrap ${
                 phase === p
-                  ? 'bg-primary-600 text-white shadow-sm'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  ? 'bg-primary text-primary-foreground shadow-sm'
+                  : 'bg-surface text-foreground hover:bg-surface-elevated'
               }`}
               aria-pressed={phase === p}
             >
@@ -100,21 +100,21 @@ export default function PlanPage() {
       {/* Main Content */}
       <main className="px-4 py-4 space-y-6 pb-28">
         {/* Risk Score */}
-        <Card className="bg-gradient-to-br from-primary-600 to-primary-800 text-white shadow-lg">
+        <Card className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-lg">
           <div className="p-5">
             <div className="flex items-start justify-between mb-4">
               <div>
-                <p className="text-primary-100 text-sm font-medium">Monsoon Risk Score</p>
+                <p className="text-primary-foreground/80 text-sm font-medium opacity-90">Monsoon Risk Score</p>
                 <p className="text-4xl font-bold mt-1">{mockPlan.riskScore}</p>
-                <p className="text-primary-200 text-sm mt-1">High Risk - Action Required</p>
+                <p className="text-primary-foreground/80 text-sm mt-1">High Risk - Action Required</p>
               </div>
-              <div className="w-20 h-20 rounded-full border-4 border-primary-300 border-t-white flex items-center justify-center">
-                <span className="text-2xl font-bold">{mockPlan.riskScore}</span>
+              <div className="w-20 h-20 rounded-full border-4 border-primary-foreground/30 flex items-center justify-center">
+                <span className="text-2xl font-bold opacity-90">{mockPlan.riskScore}</span>
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
               {mockPlan.riskFactors.map((factor, i) => (
-                <Badge key={i} variant="default" className="border-slate-300 text-slate-700 bg-slate-100">
+                <Badge key={i} variant="default" className="border-primary-foreground/20 text-primary-foreground bg-primary-foreground/10">
                   {factor}
                 </Badge>
               ))}
@@ -125,15 +125,15 @@ export default function PlanPage() {
         {/* Phase Guidance */}
         <Card>
           <div className="p-4">
-            <h2 className="font-semibold text-slate-900 mb-2">{phaseLabels[phase]} Guidance</h2>
-            <p className="text-slate-600 text-sm">{mockPlan.phaseGuidance[phase]}</p>
+            <h2 className="font-semibold text-foreground mb-2">{phaseLabels[phase]} Guidance</h2>
+            <p className="text-muted text-sm">{mockPlan.phaseGuidance[phase]}</p>
           </div>
         </Card>
 
         {/* Checklist */}
         <section>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-semibold text-slate-900">Checklist</h2>
+            <h2 className="text-lg font-semibold text-foreground">Checklist</h2>
             <Button variant="ghost" size="sm" onClick={() => {}}>
               <RefreshCw className="w-4 h-4 mr-1" />
               Refresh
@@ -145,7 +145,7 @@ export default function PlanPage() {
               onClick={() => setFilter('all')}
               role="tab"
               aria-selected={filter === 'all'}
-              className={`px-3 py-1.5 text-sm rounded-full transition-colors ${filter === 'all' ? 'bg-primary-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+              className={`px-3 py-1.5 text-sm rounded-full transition-colors ${filter === 'all' ? 'bg-primary text-primary-foreground' : 'bg-surface text-foreground hover:bg-surface-elevated'}`}
             >
               All
             </button>
@@ -155,7 +155,7 @@ export default function PlanPage() {
                 onClick={() => setFilter(cat)}
                 role="tab"
                 aria-selected={filter === cat}
-                className={`px-3 py-1.5 text-sm rounded-full transition-colors ${filter === cat ? 'bg-primary-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+                className={`px-3 py-1.5 text-sm rounded-full transition-colors ${filter === cat ? 'bg-primary text-primary-foreground' : 'bg-surface text-foreground hover:bg-surface-elevated'}`}
               >
                 {categoryConfig[cat]?.label || cat}
               </button>
@@ -172,57 +172,57 @@ export default function PlanPage() {
               const CategoryIcon = categoryConfig[category]?.icon;
 
               return (
-                <Card key={category} className="overflow-hidden">
+                <Card key={category} className="overflow-hidden p-0">
                   <button
                     onClick={() => setExpanded(expanded === category ? null : category)}
-                    className="w-full p-4 flex items-center justify-between bg-slate-50 border-b border-slate-100"
+                    className="w-full p-4 flex items-center justify-between bg-surface border-b border-border"
                     aria-expanded={expanded === category}
                   >
                     <div className="flex items-center gap-3">
-                      {CategoryIcon && <CategoryIcon className="w-5 h-5 text-slate-500" aria-hidden="true" />}
-                      <span className="font-medium text-slate-900 capitalize">{categoryConfig[category]?.label || category}</span>
-                      <span className={`px-2 py-0.5 text-xs font-bold rounded ${completed === total ? 'bg-green-100 text-green-800' : 'bg-slate-100 text-slate-700'}`}>
+                      {CategoryIcon && <CategoryIcon className="w-5 h-5 text-muted" aria-hidden="true" />}
+                      <span className="font-medium text-foreground capitalize">{categoryConfig[category]?.label || category}</span>
+                      <span className={`px-2 py-0.5 text-xs font-bold rounded ${completed === total ? 'bg-success-100 text-success-700 dark:bg-success-900/40 dark:text-success-300' : 'bg-surface-elevated text-muted'}`}>
                         {completed}/{total}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="w-24 h-2 bg-slate-200 rounded-full overflow-hidden">
-                        <div className="h-full bg-primary-600 rounded-full transition-all" style={{ width: `${(completed / total) * 100}%` }} />
+                      <div className="w-24 h-2 bg-surface-elevated rounded-full overflow-hidden">
+                        <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${(completed / total) * 100}%` }} />
                       </div>
-                      {expanded === category ? <ChevronUp className="w-5 h-5 text-slate-400" /> : <ChevronDown className="w-5 h-5 text-slate-400" />}
+                      {expanded === category ? <ChevronUp className="w-5 h-5 text-muted" /> : <ChevronDown className="w-5 h-5 text-muted" />}
                     </div>
                   </button>
 
                   {expanded === category && (
-                    <div className="divide-y divide-slate-100">
+                    <div className="divide-y divide-border">
                       {items.map(item => {
                         const ItemCategoryIcon = categoryConfig[item.category]?.icon;
                         return (
-                          <div key={item.itemId} className="p-4 flex items-start gap-3 hover:bg-slate-50 transition-colors">
+                          <div key={item.itemId} className="p-4 flex items-start gap-3 hover:bg-surface transition-colors">
                             <button
                               onClick={() => {}}
-                              className={`flex-shrink-0 w-6 h-6 rounded border-2 transition-colors ${item.is_completed ? 'bg-green-500 border-green-500' : 'border-slate-300 hover:border-primary-400'}`}
+                              className={`flex-shrink-0 w-6 h-6 rounded border-2 transition-colors ${item.is_completed ? 'bg-success border-success' : 'border-border hover:border-primary'}`}
                               aria-label={item.is_completed ? 'Mark as incomplete' : 'Mark as complete'}
                               aria-pressed={item.is_completed}
                             >
-                              {item.is_completed && <Check className="w-4 h-4 text-white" aria-hidden="true" />}
+                              {item.is_completed && <Check className="w-4 h-4 text-success-foreground" aria-hidden="true" />}
                             </button>
 
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 mb-1">
-                                <h4 className={`font-medium text-slate-900 ${item.is_completed ? 'line-through text-slate-400' : ''}`}>
+                                <h4 className={`font-medium text-foreground ${item.is_completed ? 'line-through text-muted' : ''}`}>
                                   {item.title}
                                 </h4>
                                 <Badge variant={item.priority as any}>{priorityConfig[item.priority]?.label}</Badge>
                               </div>
 
                               {item.description && (
-                                <p className={`text-sm ${item.is_completed ? 'text-slate-400' : 'text-slate-600'}`}>
+                                <p className={`text-sm ${item.is_completed ? 'text-muted' : 'text-muted'}`}>
                                   {item.description}
                                 </p>
                               )}
 
-                              <div className="flex items-center gap-3 mt-2 text-xs text-slate-500">
+                              <div className="flex items-center gap-3 mt-2 text-xs text-muted">
                                 <span className="flex items-center gap-1">
                                   {ItemCategoryIcon && <ItemCategoryIcon className="w-3 h-3" />}
                                   {categoryConfig[item.category]?.label}

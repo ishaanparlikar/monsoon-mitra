@@ -128,25 +128,27 @@ export function LanguageSelector({
       ref={listRef}
       role="listbox"
       aria-label={label}
-      className="fixed z-50 w-full max-w-sm mt-1.5 bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden animate-fade-in"
+      className="fixed z-50 w-full max-w-sm mt-1.5 bg-background dark:bg-surface-elevated rounded-xl border border-border shadow-lg overflow-hidden animate-fade-in"
       style={{ maxHeight: 320 }}
     >
-      <div className="p-2 border-b border-gray-100 sticky top-0 bg-white">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search languages..."
-          className="w-full pl-9 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
-          aria-label="Search languages"
-          autoFocus
-        />
-        <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
+      <div className="p-2 border-b border-border sticky top-0 bg-background dark:bg-surface-elevated">
+        <div className="relative">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search languages..."
+            className="w-full pl-9 pr-3 py-2 bg-surface border border-border rounded-lg text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary text-foreground placeholder:text-muted"
+            aria-label="Search languages"
+            autoFocus
+          />
+          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
       </div>
       {filteredLanguages.length === 0 ? (
-        <div className="px-4 py-6 text-center text-sm text-gray-500">No languages found</div>
+        <div className="px-4 py-6 text-center text-sm text-muted">No languages found</div>
       ) : (
         <div className="max-h-[280px] overflow-y-auto">
           {filteredLanguages.map((lang, index) => (
@@ -159,19 +161,19 @@ export function LanguageSelector({
               onMouseDown={(e) => e.preventDefault()}
               className={cn(
                 'w-full px-4 py-3 text-left flex items-center gap-3',
-                'hover:bg-gray-50 transition-colors',
-                'focus:outline-none focus:bg-gray-50',
-                lang.code === value && 'bg-primary-50 text-primary-700'
+                'hover:bg-surface transition-colors',
+                'focus:outline-none focus:bg-surface',
+                lang.code === value && 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary'
               )}
             >
               <span className="text-lg" aria-hidden="true">{lang.flag}</span>
               <div className="flex-1 min-w-0">
-                <span className="block truncate font-medium">{lang.name}</span>
+                <span className="block truncate font-medium text-foreground">{lang.name}</span>
                 {showNativeName && lang.nativeName !== lang.name && (
-                  <span className="block text-sm text-gray-500 truncate">{lang.nativeName}</span>
+                  <span className="block text-sm text-muted truncate">{lang.nativeName}</span>
                 )}
               </div>
-              {lang.code === value && <Check className="w-5 h-5 text-primary-600 flex-shrink-0" aria-hidden="true" />}
+              {lang.code === value && <Check className="w-5 h-5 text-primary flex-shrink-0" aria-hidden="true" />}
             </button>
           ))}
         </div>
@@ -183,7 +185,7 @@ export function LanguageSelector({
     return (
       <div className={cn('w-full', fullWidth && 'sm:max-w-xs', className)}>
         {label && (
-          <label className="block text-sm font-medium text-gray-700 mb-1.5">{label}</label>
+          <label className="block text-sm font-medium text-foreground mb-1.5 dark:text-foreground">{label}</label>
         )}
         <select
           value={value}
@@ -191,13 +193,12 @@ export function LanguageSelector({
           disabled={disabled}
           className={cn(
             'w-full min-h-[48px] px-4 py-3',
-            'rounded-xl border bg-white',
-            'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent',
-            'disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed',
+            'rounded-xl border bg-background',
+            'focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent',
+            'disabled:bg-surface disabled:text-muted disabled:cursor-not-allowed',
             'appearance-none bg-no-repeat bg-right-3 bg-center',
-            'bg-[url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 24 24\' stroke=\'%2364748b\'%3E%3Cpath stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M19 9l-7 7-7-7\'%3E%3C/path%3E%3C/svg%3E")]',
             'pr-10',
-            disabled ? 'border-gray-200' : 'border-gray-300 hover:border-gray-400',
+            disabled ? 'border-border' : 'border-border hover:border-border-strong',
             className
           )}
         >

@@ -21,9 +21,7 @@ const navItems: NavItem[] = [
 export function BottomNavigation() {
   const pathname = usePathname();
 
-  // Strip locale prefix so /en/alerts matches /alerts
   const segments = pathname.split('/').filter(Boolean);
-  // If first segment is likely a locale (2 character code), strip it
   const localePath = segments.length >= 1 && segments[0].length === 2
     ? '/' + segments.slice(1).join('/')
     : pathname;
@@ -31,7 +29,7 @@ export function BottomNavigation() {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 safe-bottom bg-white/95 backdrop-blur-md border-t border-cloud-200"
+      className="fixed bottom-0 left-0 right-0 z-50 safe-bottom bg-background/95 backdrop-blur-md border-t border-border"
       role="navigation"
       aria-label="Main navigation"
     >
@@ -50,8 +48,8 @@ export function BottomNavigation() {
                 'flex flex-col items-center justify-center gap-1 px-2 py-2 rounded-xl transition-all duration-200',
                 'touch-manipulation min-h-[56px]',
                 isActive
-                  ? 'text-storm-700 bg-storm-50'
-                  : 'text-cloud-400 hover:text-storm-700 hover:bg-cloud-50'
+                  ? 'text-primary bg-primary/10'
+                  : 'text-muted hover:text-foreground hover:bg-surface'
               )}
               aria-current={isActive ? 'page' : undefined}
             >

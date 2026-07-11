@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
-import { updateChecklistItem } from '@/app/actions';
+import { updateChecklistItem, askAssistant } from '@/app/actions';
 
 const categoryConfig: Record<string, { icon: any; label: string }> = {
   home_prep: { icon: Home, label: 'Home Prep' },
@@ -40,6 +40,155 @@ export function DashboardUI({ initialChecklist, planDetails, alerts, riskScore }
   const [sosStep, setSosStep] = useState<'confirm' | 'sending' | 'sent'>('confirm');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [, startSosTransition] = useTransition();
+
+  const [qaQuery, setQaQuery] = useState('');
+  const [qaAnswer, setQaAnswer] = useState<string | null>(null);
+  const [qaLoading, setQaLoading] = useState(false);
+  const [qaError, setQaError] = useState<string | null>(null);
+
+  const SUGGESTED_QUERIES = [
+    { text: '📍 Nearest shelters?', query: 'Where is the nearest shelter from my location?' },
+    { text: '🛠️ Secure housing?', query: 'How do I secure my house for the storm?' },
+    { text: '🎒 Emergency kit?', query: 'What items do I need in my emergency kit?' },
+    { text: '📊 Risk breakdown?', query: 'Explain my family risk score.' },
+  ];
+
+  const handleQaSubmit = async (queryText: string) => {
+    if (!queryText.trim()) return;
+    setQaLoading(true);
+    setQaError(null);
+    setQaAnswer(null);
+    try {
+      const res = await askAssistant(queryText, planDetails?.family_id);
+      if (res.success) {
+        setQaAnswer(res.answer);
+      } else {
+        setQaError(res.error || 'Failed to get a response. Please try again.');
+      }
+    } catch (err: any) {
+      console.error(err);
+      setQaError('An unexpected error occurred.');
+    } finally {
+      setQaLoading(false);
+    }
+  };
+
+  const renderQAPanel = () => {
+    return (
+      <Card className="border border-cloud-200 dark:border-storm-700 bg-white/80 dark:bg-storm-800/80 backdrop-blur-md shadow-cloud-shadow relative overflow-hidden transition-all duration-300">
+        <CardContent className="p-5">
+          <h3 className="font-semibold text-storm-900 dark:text-white mb-2 flex items-center gap-2">
+            <MessageSquare className="w-5 h-5 text-water-500 animate-pulse" />
+            Monsoon Mitra AI Assistant
+          </h3>
+          <p className="text-xs text-cloud-600 dark:text-cloud-300 mb-4 leading-normal">
+            Ask about shelters, packing kits, or securing your home. Answers are tailored to your family profile.
+          </p>
+
+          {/* Suggested Queries */}
+          <div className="flex flex-wrap gap-2 mb-4">
+            {SUGGESTED_QUERIES.map((qObj, idx) => (
+              <button
+                key={idx}
+                onClick={() => {
+                  setQaQuery(qObj.query);
+                  handleQaSubmit(qObj.query);
+                }}
+                disabled={qaLoading}
+                className="text-xs px-3 py-1.5 rounded-full bg-water-50 dark:bg-water-950/45 text-water-700 dark:text-water-300 border border-water-100 dark:border-water-900 hover:bg-water-100 dark:hover:bg-water-900/60 transition-all font-medium flex items-center gap-1 active:scale-95 disabled:opacity-50 min-h-[32px] cursor-pointer"
+              >
+                {qObj.text}
+              </button>
+            ))}
+          </div>
+
+          {/* Form */}
+          <div className="flex gap-2 items-center">
+            <input
+              type="text"
+              value={qaQuery}
+              onChange={(e) => setQaQuery(e.target.value)}
+              placeholder="Ask anything..."
+              disabled={qaLoading}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleQaSubmit(qaQuery);
+              }}
+              className="flex-1 px-4 py-2 text-sm rounded-xl border border-cloud-300 dark:border-storm-600 bg-white dark:bg-storm-900 text-storm-900 dark:text-white placeholder-cloud-400 dark:placeholder-storm-500 focus:outline-none focus:ring-2 focus:ring-water-500 transition-all min-h-[44px]"
+            />
+            <Button
+              onClick={() => handleQaSubmit(qaQuery)}
+              disabled={qaLoading}
+              className="px-4 bg-water-500 hover:bg-water-600 text-white min-h-[44px]"
+            >
+              Ask
+            </Button>
+          </div>
+
+          {/* Response / Loading Section */}
+          {(qaLoading || qaAnswer || qaError) && (
+            <div className="mt-4 p-4 rounded-2xl bg-cloud-50 dark:bg-storm-900/50 border border-cloud-100 dark:border-storm-800 transition-all">
+              {qaLoading && (
+                <div className="space-y-3 py-2 animate-pulse">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2.5 h-2.5 bg-water-505 rounded-full animate-bounce animate-duration-1000" />
+                    <p className="text-xs text-cloud-500 dark:text-cloud-400 font-semibold font-mono tracking-wider">MITRA IS THINKING...</p>
+                  </div>
+                  <div className="h-3 bg-cloud-200 dark:bg-storm-850 rounded w-full" />
+                  <div className="h-3 bg-cloud-200 dark:bg-storm-850 rounded w-[90%]" />
+                  <div className="h-3 bg-cloud-205 dark:bg-storm-850 rounded w-[75%]" />
+                </div>
+              )}
+
+              {qaError && (
+                <p className="text-sm text-danger-600 dark:text-danger-400">{qaError}</p>
+              )}
+
+              {qaAnswer && (
+                <div className="prose prose-sm dark:prose-invert max-w-none text-xs text-storm-850 dark:text-cloud-200 leading-relaxed font-normal space-y-2 max-h-[300px] overflow-y-auto pr-1">
+                  {qaAnswer.split('\n').map((line, idx) => {
+                    if (line.startsWith('### ')) {
+                      return <h4 key={idx} className="font-bold text-sm text-storm-905 dark:text-white mt-3 mb-1">{line.replace('### ', '')}</h4>;
+                    }
+                    if (line.startsWith('- ') || line.startsWith('* ')) {
+                      return <li key={idx} className="list-disc ml-4 my-1 text-xs">{line.substring(2)}</li>;
+                    }
+                    if (/^\d+\.\s/.test(line)) {
+                      return <li key={idx} className="list-decimal ml-4 my-1 text-xs">{line.replace(/^\d+\.\s/, '')}</li>;
+                    }
+                    if (!line.trim()) {
+                      return <div key={idx} className="h-2" />;
+                    }
+                    // Handle bold highlights
+                    const parts = line.split('**');
+                    if (parts.length > 1) {
+                      return (
+                        <p key={idx} className="my-1 text-xs">
+                          {parts.map((p, i) => i % 2 === 1 ? <strong key={i} className="text-water-650 dark:text-water-300 font-bold">{p}</strong> : p)}
+                        </p>
+                      );
+                    }
+                    return <p key={idx} className="my-1 text-xs">{line}</p>;
+                  })}
+                  <div className="pt-3 border-t border-cloud-200/50 dark:border-storm-800/80 flex items-center justify-between">
+                    <span className="text-[9px] text-cloud-450 dark:text-storm-500 font-mono">GENERATED BY MONSOON MITRA AI</span>
+                    <button
+                      onClick={() => {
+                        setQaAnswer(null);
+                        setQaQuery('');
+                      }}
+                      className="text-[10px] text-water-600 dark:text-water-400 font-bold hover:underline cursor-pointer"
+                    >
+                      Dismiss
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    );
+  };
 
   const categories = Array.from(new Set(checklist.map(item => item.category)));
   const criticalActions = checklist.filter(i => !i.is_completed && i.priority === 'critical');
@@ -279,6 +428,7 @@ export function DashboardUI({ initialChecklist, planDetails, alerts, riskScore }
 
             {/* Desktop Sidebar */}
             <div className="desktop-sidebar space-y-6">
+              {renderQAPanel()}
               {/* Critical Actions */}
               {criticalActions.length > 0 && (
                 <Card className="bg-white dark:bg-storm-800 border-danger-200 dark:border-danger-800/50">
@@ -367,6 +517,9 @@ export function DashboardUI({ initialChecklist, planDetails, alerts, riskScore }
             </div>
           </CardContent>
         </Card>
+
+        {/* Monsoon Mitra AI Assistant */}
+        {renderQAPanel()}
 
         {/* Critical Actions */}
         {criticalActions.length > 0 && (

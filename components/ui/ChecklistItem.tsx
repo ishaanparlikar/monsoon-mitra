@@ -52,10 +52,10 @@ const categoryConfig: Record<ChecklistItemCategory, { icon: ReactNode; label: st
 };
 
 const priorityIcons = {
-  critical: <AlertTriangle className="w-4 h-4 text-red-500" aria-hidden="true" />,
-  high: <AlertCircle className="w-4 h-4 text-orange-500" aria-hidden="true" />,
-  medium: <Info className="w-4 h-4 text-blue-500" aria-hidden="true" />,
-  low: <Shield className="w-4 h-4 text-green-500" aria-hidden="true" />,
+  critical: <AlertTriangle className="w-4 h-4 text-danger-500 dark:text-danger-400" aria-hidden="true" />,
+  high: <AlertCircle className="w-4 h-4 text-warning-500 dark:text-warning-400" aria-hidden="true" />,
+  medium: <Info className="w-4 h-4 text-info-500 dark:text-info-400" aria-hidden="true" />,
+  low: <Shield className="w-4 h-4 text-success-500 dark:text-success-400" aria-hidden="true" />,
 };
 
 export const ChecklistItem = forwardRef<HTMLDivElement, ChecklistItemProps>(
@@ -125,9 +125,9 @@ export const ChecklistItem = forwardRef<HTMLDivElement, ChecklistItemProps>(
       <div
         ref={ref}
         className={cn(
-          'relative bg-white border-b border-gray-100',
+          'relative bg-background border-b border-border',
           'transition-transform duration-200 ease-out',
-          item.is_completed && 'bg-green-50',
+          item.is_completed && 'bg-success-50/50 dark:bg-success-900/20',
           showActions && 'translate-x-[-120px]'
         )}
         style={{ transform: `translateX(${swipeOffset}px)` }}
@@ -136,7 +136,7 @@ export const ChecklistItem = forwardRef<HTMLDivElement, ChecklistItemProps>(
         onTouchEnd={handleTouchEnd}
       >
         <label
-          className="flex items-start gap-3 p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+          className="flex items-start gap-3 p-4 cursor-pointer hover:bg-surface transition-colors"
           onClick={handleToggle}
         >
           <input
@@ -146,7 +146,7 @@ export const ChecklistItem = forwardRef<HTMLDivElement, ChecklistItemProps>(
               e.stopPropagation();
               if (!showActions) onToggle(item.id, !item.is_completed);
             }}
-            className="w-5 h-5 mt-0.5 text-primary-600 border-gray-300 rounded focus:ring-2 focus:ring-primary-500"
+            className="w-5 h-5 mt-0.5 text-primary border-border rounded focus:ring-2 focus:ring-primary focus:ring-offset-2"
             aria-label={displayText}
           />
           <div className="flex-1 min-w-0">
@@ -166,18 +166,18 @@ export const ChecklistItem = forwardRef<HTMLDivElement, ChecklistItemProps>(
             </div>
             <p
               className={cn(
-                'text-gray-900',
-                item.is_completed ? 'line-through text-gray-400' : ''
+                'text-foreground',
+                item.is_completed ? 'line-through text-muted' : ''
               )}
             >
               {displayText}
             </p>
             {item.localized_text && language !== 'en' && (
-              <p className="text-sm text-gray-500 mt-1">{item.item_text}</p>
+              <p className="text-sm text-muted mt-1">{item.item_text}</p>
             )}
           </div>
           {item.is_completed && (
-            <Check className="w-6 h-6 text-green-500 flex-shrink-0" aria-hidden="true" />
+            <Check className="w-6 h-6 text-success-500 dark:text-success-400 flex-shrink-0" aria-hidden="true" />
           )}
           {!item.is_completed && (
             <div className="flex-shrink-0" aria-hidden="true">
@@ -194,7 +194,7 @@ export const ChecklistItem = forwardRef<HTMLDivElement, ChecklistItemProps>(
           >
             <button
               onClick={handleEdit}
-              className="p-2 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors"
+              className="p-2 rounded-lg bg-info-100 text-info-700 hover:bg-info-200 transition-colors dark:bg-info-900/40 dark:text-info-300"
               role="menuitem"
               aria-label="Edit item"
             >
@@ -202,7 +202,7 @@ export const ChecklistItem = forwardRef<HTMLDivElement, ChecklistItemProps>(
             </button>
             <button
               onClick={handleDelete}
-              className="p-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition-colors"
+              className="p-2 rounded-lg bg-danger-100 text-danger-700 hover:bg-danger-200 transition-colors dark:bg-danger-900/40 dark:text-danger-300"
               role="menuitem"
               aria-label="Delete item"
             >
@@ -238,10 +238,10 @@ export function ChecklistItemSkeleton({ count = 3 }: ChecklistItemSkeletonProps)
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="animate-pulse">
           <div className="flex items-center gap-3 p-4">
-            <div className="w-5 h-5 rounded bg-gray-200" aria-hidden="true" />
+            <div className="w-5 h-5 rounded bg-surface dark:bg-ctp-mocha-surface1" aria-hidden="true" />
             <div className="flex-1 space-y-2">
-              <div className="h-4 w-1/4 bg-gray-200 rounded" aria-hidden="true" />
-              <div className="h-4 w-3/4 bg-gray-200 rounded" aria-hidden="true" />
+              <div className="h-4 w-1/4 bg-surface dark:bg-ctp-mocha-surface1 rounded" aria-hidden="true" />
+              <div className="h-4 w-3/4 bg-surface dark:bg-ctp-mocha-surface1 rounded" aria-hidden="true" />
             </div>
           </div>
         </div>

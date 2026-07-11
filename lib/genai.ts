@@ -598,3 +598,193 @@ export function mockGenerateShelters(
     };
   });
 }
+
+export interface FamilyQARequestContext {
+  location?: {
+    district: string;
+    ward?: string | null;
+    hazard_zones?: string[];
+  };
+  housingType?: string;
+  members?: {
+    relation: string;
+    age?: number;
+    medical_conditions?: string[];
+  }[];
+  riskScore?: number;
+  completionRatio?: string;
+  activeAlerts?: {
+    severity: string;
+    title: string;
+    description: string;
+  }[];
+}
+
+export async function answerConversationQuestion(input: {
+  question: string;
+  familyContext: FamilyQARequestContext;
+  language: string;
+}): Promise<string> {
+  const provider = getAIProvider();
+
+  if (process.env.NEXT_PUBLIC_ENABLE_MOCK_GENAI === 'true' || !process.env.GEMINI_API_KEY) {
+    return mockAnswerConversationQuestion(input);
+  }
+
+  try {
+    if (provider === 'gemini') {
+      return await answerConversationQuestionGemini(input);
+    } else {
+      return await answerConversationQuestionOpenAI(input);
+    }
+  } catch (error) {
+    console.error('AI Q&A failed, using mock fallback:', error);
+    return mockAnswerConversationQuestion(input);
+  }
+}
+
+async function answerConversationQuestionGemini(input: {
+  question: string;
+  familyContext: FamilyQARequestContext;
+  language: string;
+}): Promise<string> {
+  const prompt = buildQAPrompt(input);
+  const model = genAI.getGenerativeModel({
+    model: 'gemini-1.5-flash',
+    generationConfig: {
+      temperature: 0.3,
+      maxOutputTokens: 2000,
+    },
+  });
+
+  const result = await model.generateContent([
+    { text: SYSTEM_PROMPT },
+    { text: prompt },
+  ]);
+
+  const content = result.response.text();
+  if (!content) throw new Error('Empty response from Gemini');
+  return content;
+}
+
+async function answerConversationQuestionOpenAI(input: {
+  question: string;
+  familyContext: FamilyQARequestContext;
+  language: string;
+}): Promise<string> {
+  const prompt = buildQAPrompt(input);
+  const response = await openai.chat.completions.create({
+    model: 'gpt-4o-mini',
+    messages: [
+      { role: 'system', content: SYSTEM_PROMPT },
+      { role: 'user', content: prompt },
+    ],
+    temperature: 0.3,
+    max_tokens: 2000,
+  });
+
+  const content = response.choices[0]?.message?.content;
+  if (!content) throw new Error('Empty response from OpenAI');
+  return content;
+}
+
+function buildQAPrompt(input: { question: string; familyContext: FamilyQARequestContext; language: string }): string {
+  const { question, familyContext, language } = input;
+  return `
+Answer this citizen question regarding monsoon safety/preparation.
+CITIZEN QUESTION: "${question}"
+
+FAMILY SAFETY CONTEXT:
+- Location: ${familyContext.location?.district || 'Mumbai Suburban'}, ${familyContext.location?.ward || 'N/A'} (Hazard zones: ${familyContext.location?.hazard_zones?.join(', ') || 'None'})
+- Housing Type: ${familyContext.housingType || 'pucca'}
+- Members: ${familyContext.members?.map((m) => `${m.relation}, age ${m.age}`).join('; ') || 'None'}
+- Vulnerability Risk Score: ${familyContext.riskScore || 0}/100
+- Checklist Completion Ratio: ${familyContext.completionRatio || '0/0'}
+- Active Weather Alerts: ${familyContext.activeAlerts?.map((a) => `${a.severity}: ${a.title}`).join('; ') || 'None'}
+
+Provide an accurate, highly specific, and actionable answer in the instruction language: ${language}.
+Under no circumstances should you hallucinate evacuation lines or helpline numbers. Keep it concise, format with markdown.
+`;
+}
+
+export function mockAnswerConversationQuestion(input: {
+  question: string;
+  familyContext: FamilyQARequestContext;
+  language: string;
+}): string {
+  const q = input.question.toLowerCase();
+  const district = input.familyContext.location?.district || 'Mumbai Suburban';
+  const ward = input.familyContext.location?.ward || 'K-West';
+  const housing = input.familyContext.housingType || 'pucca';
+  const score = input.familyContext.riskScore || 0;
+  const ratio = input.familyContext.completionRatio || '0/8';
+
+  if (q.includes('shelter')) {
+    return `### 🏠 Emergency Shelters Near You
+
+Based on your current location in **${ward}, ${district}**, the closest shelters generated for your family are:
+1. **${ward} Municipal Secondary School** (Approx. 1.1 km away) — Fully accessible, equipped with drinking water, first aid, and power backup.
+2. **NDMA Relief Camp - Sector-4** (Approx. 2.4 km away) — High occupancy capacity, pet-friendly but limited medical support.
+
+We recommend tracking safety statuses under the **Shelters** tab. In case of water logging or immediate danger, seek higher ground immediately.`;
+  }
+
+  if (q.includes('secure') || q.includes('house') || q.includes('home')) {
+    return `### 🛠️ Securing Your ${housing.toUpperCase()} Home
+
+You live in a **${housing}** structure in **${ward}**. 
+Here are the essential steps recommended by BMC Ward Office for home hardening:
+- **Elevate Valuables:** Ensure all electrical sockets and high-value documents/appliances are moved to a high level (at least 3-4 feet from the ground).
+- **Check Drainage:** Clean gutters and ensure external storm channels around your plot are free from plastic waste.
+- **Roof Support:** If structural weaknesses are suspected, secure loose roofing sheets with heavy sandbags.
+- **Vulnerable Entry Points:** Keep sandbags near entrance doors to prevent surface water runoff from backing up.`;
+  }
+
+  if (q.includes('kit') || q.includes('supply') || q.includes('bag')) {
+    return `### 🎒 Emergency Preparedness Kit
+
+Your current checklist completion is at **${ratio}**. Given your household size, your emergency kit must include:
+- **Medical Essentials:** 3-5 days of necessary medications for vulnerable family members.
+- **Fresh Supplies:** At least 3 liters of boiled/bottled water per person per day.
+- **Emergency Tools:** High-intensity battery torch, spare cell batteries, whistle, and dry matchboxes.
+- **Waterproof Care:** Store original certificates, identity cards, and mobile powerbanks inside airtight heavy-duty plastic sleeves.`;
+  }
+
+  if (q.includes('alert') || q.includes('rain') || q.includes('weather') || q.includes('mithi')) {
+    const alertsAlertText = input.familyContext.activeAlerts && input.familyContext.activeAlerts.length > 0
+      ? `You currently have **${input.familyContext.activeAlerts.length} active weather warnings**, including a Red Alert for extremely heavy rainfall and a rising river level concern.`
+      : 'There are currently no flash flood/rainfall alerts for your ward.';
+
+    return `### 🚨 Weather Warning status for ${district}
+
+${alertsAlertText}
+
+**Safety Guidance:**
+- **Travel Restriction:** Do not venture into flooded streets or cross low-lying subways.
+- **Power Precautions:** Ground level installations should be disconnected from the mains in waterlogged premises to prevent leakage currents.
+- **IMD reports:** Rain bands are moving eastward. Updates are released every 3 hours.`;
+  }
+
+  if (q.includes('risk') || q.includes('score')) {
+    return `### 📊 Risk Score Breakdown: ${score}/100
+
+Your Family Risk Score is derived from:
+1. **Housing Type (${housing}):** ${housing === 'kutcha' ? 'High vulnerability due to non-permanent structure.' : 'Moderate vulnerability.'}
+2. **Geo-Location:** Proximity to flood-prone low-lying areas.
+3. **Preparedness Level:** Checklist completion ratio is **${ratio}**.
+
+To reduce your risk, we recommend completing the **Critical** actions on your dashboard (e.g. elevating sockets, saving contact numbers).`;
+  }
+
+  return `### 👋 Welcome to Monsoon Mitra AI Assistant
+
+I am your personalized emergency companion. Based on your profile, I have compiled your safety guidelines for **${district}**.
+
+**You can ask me questions about:**
+1. 📍 Nearest shelters and evacuation routes from **${ward}**
+2. 🛠️ Preparing your **${housing}** house
+3. 🎒 Crucial emergency kit checklist components
+4. 🚨 Explaining the current weather warnings or your **${score}/100** risk score
+
+*Disclaimer: Grounded in official NDMA & IMD guidelines. For extreme distress, please use the SOS button or dial 112.*`;
+}

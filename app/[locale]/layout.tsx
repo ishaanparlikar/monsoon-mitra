@@ -3,6 +3,7 @@ import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/lib/i18n/routing';
 import { AppProvider } from '@/components/AppContext';
+import { AuthProvider } from '@/components/AuthProvider';
 import { ServiceWorkerRegistration } from '@/components/ServiceWorkerRegistration';
 import { Inter } from 'next/font/google';
 import '@/app/globals.css';
@@ -17,8 +18,8 @@ export const metadata = {
 
 export const viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#f8f6f3' },
-    { media: '(prefers-color-scheme: dark)', color: '#0f1115' },
+    { media: '(prefers-color-scheme: light)', color: '#eff1f5' },
+    { media: '(prefers-color-scheme: dark)', color: '#1e1e2e' },
   ],
   width: 'device-width',
   initialScale: 1,
@@ -41,13 +42,15 @@ export default async function LocaleLayout({
   const messages = await getMessages({ locale: resolvedLocale });
 
   return (
-    <html lang={resolvedLocale} suppressHydrationWarning>
-      <body className={`${inter.className} selection:bg-blue-500/30 antialiased`}>
+    <html lang={resolvedLocale} suppressHydrationWarning className="dark">
+      <body className={`${inter.className} selection:bg-primary/30 antialiased`}>
         <ServiceWorkerRegistration />
         <NextIntlClientProvider locale={resolvedLocale} messages={messages}>
-          <AppProvider>
-            {children}
-          </AppProvider>
+          <AuthProvider>
+            <AppProvider>
+              {children}
+            </AppProvider>
+          </AuthProvider>
         </NextIntlClientProvider>
       </body>
     </html>

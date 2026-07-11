@@ -32,12 +32,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const baseStyles = 'inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation';
 
     const variants = {
-      primary: 'bg-storm-700 text-white hover:bg-storm-800 focus-visible:ring-storm-500 shadow-sm dark:bg-storm-600 dark:hover:bg-storm-500',
-      secondary: 'bg-safe-500 text-white hover:bg-safe-600 focus-visible:ring-safe-500 shadow-sm',
-      outline: 'border-2 border-storm-700 text-storm-700 hover:bg-storm-50 focus-visible:ring-storm-500 dark:border-storm-500 dark:text-storm-300 dark:hover:bg-storm-800',
-      ghost: 'text-storm-600 hover:bg-storm-50 focus-visible:ring-storm-500 dark:text-cloud-200 dark:hover:bg-storm-800',
-      destructive: 'bg-danger-600 text-white hover:bg-danger-700 focus-visible:ring-danger-500 shadow-sm',
-      warning: 'bg-caution-500 text-white hover:bg-caution-600 focus-visible:ring-caution-500 shadow-sm',
+      primary: 'bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-primary shadow-sm',
+      secondary: 'bg-success text-success-foreground hover:bg-success/90 focus-visible:ring-success shadow-sm',
+      outline: 'border-2 border-primary text-primary hover:bg-primary/10 focus-visible:ring-primary',
+      ghost: 'text-foreground hover:bg-surface focus-visible:ring-primary',
+      destructive: 'bg-danger text-danger-foreground hover:bg-danger/90 focus-visible:ring-danger shadow-sm',
+      warning: 'bg-warning text-warning-foreground hover:bg-warning/90 focus-visible:ring-warning shadow-sm',
     };
 
     const sizes = {
