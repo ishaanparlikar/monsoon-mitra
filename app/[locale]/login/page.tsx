@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Droplet, Shield, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { PhoneInput } from '@/components/ui/Input';
