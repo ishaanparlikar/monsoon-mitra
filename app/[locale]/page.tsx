@@ -36,14 +36,17 @@ export default async function DashboardPage() {
 
   let plan = null;
   let checklist: any[] = [];
+  let riskScore = 0;
 
-  const fetchedPlan = await getActivePlan(familyId, 'pre_monsoon' as PreparednessPhase);
-  if (fetchedPlan) {
-    plan = fetchedPlan;
-    checklist = fetchedPlan.checklistItems || [];
+  if (familyId) {
+    const fetchedPlan = await getActivePlan(familyId, 'pre_monsoon' as PreparednessPhase);
+    if (fetchedPlan) {
+      plan = fetchedPlan;
+      checklist = fetchedPlan.checklistItems || [];
+    }
+    riskScore = await getRiskScore(familyId);
   }
 
-  const riskScore = await getRiskScore(familyId);
   const alerts = await getActiveAlerts(district);
 
   return (
