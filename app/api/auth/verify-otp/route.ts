@@ -17,31 +17,68 @@ export async function POST(request: Request) {
     if (token === '123456') {
       const adminSupabase = createAdminClient();
 
-      // Find if user already exists
-      const { data: { users }, error: listError } = await adminSupabase.auth.admin.listUsers();
-      if (listError) {
-        return NextResponse.json(
-          { error: { message: `Bypass failed: ${listError.message}` } },
-          { status: 400 }
-        );
+      let cleanPhone = phone.trim();
+      let digitsOnly = cleanPhone.replace(/\D/g, '');
+      if (digitsOnly.length === 10) {
+        cleanPhone = `+91${digitsOnly}`;
+      } else if (digitsOnly.length === 12 && digitsOnly.startsWith('91')) {
+        cleanPhone = `+${digitsOnly}`;
+        digitsOnly = digitsOnly.slice(2);
+      } else {
+        // Fallback for short test numbers
+        cleanPhone = `+91${digitsOnly.padEnd(10, '0').slice(0, 10)}`;
+        digitsOnly = cleanPhone.replace(/\D/g, '').slice(2);
       }
 
-      const cleanPhone = phone.trim();
-      const digitsOnly = cleanPhone.replace(/\D/g, '');
-      let user: typeof users[number] | null = users.find(
-        (u) =>
-          u.phone === cleanPhone ||
-          u.phone === `+${digitsOnly}` ||
-          u.phone?.replace(/\D/g, '') === digitsOnly
-      ) || null;
-
       const bypassPassword = 'temp-otp-pass-123456';
+      const bypassEmail = `${digitsOnly}@monsoon.mitra`;
+
+      let user: { id: string; email?: string | null; phone?: string | null } | null = null;
+
+      // 1. Resolve user ID from public profiles table
+      const { data: profile } = (await adminSupabase
+        .from('profiles')
+        .select('id')
+        .eq('phone', cleanPhone)
+        .maybeSingle()) as { data: { id: string } | null; error: unknown };
+
+      if (profile) {
+        user = { id: profile.id };
+      } else {
+        // 2. Try direct auth.users database lookup since listUsers has pagination limits
+        const { data: authUser } = (await (adminSupabase as unknown as import('@supabase/supabase-js').SupabaseClient)
+          .schema('auth')
+          .from('users')
+          .select('id, email, phone')
+          .eq('phone', cleanPhone)
+          .maybeSingle()) as { data: { id: string; email: string | null; phone: string | null } | null; error: unknown };
+
+        if (authUser) {
+          user = authUser;
+        }
+      }
 
       if (!user) {
-        // Create confirmed user in auth database
+        // Find by email to prevent registration collision
+        const { data: authUserByEmail } = (await (adminSupabase as unknown as import('@supabase/supabase-js').SupabaseClient)
+          .schema('auth')
+          .from('users')
+          .select('id, email, phone')
+          .eq('email', bypassEmail)
+          .maybeSingle()) as { data: { id: string; email: string | null; phone: string | null } | null; error: unknown };
+
+        if (authUserByEmail) {
+          user = authUserByEmail;
+        }
+      }
+
+      if (!user) {
+        // 3. Create confirmed user in auth database with email and phone
         const { data: { user: createdUser }, error: createError } = await adminSupabase.auth.admin.createUser({
-          phone: cleanPhone.startsWith('+') ? cleanPhone : `+${digitsOnly}`,
+          email: bypassEmail,
+          phone: cleanPhone,
           phone_confirm: true,
+          email_confirm: true,
           password: bypassPassword,
         });
 
@@ -52,19 +89,6 @@ export async function POST(request: Request) {
           );
         }
         user = createdUser;
-      } else {
-        // Update user password to match bypass password
-        const { error: updateError } = await adminSupabase.auth.admin.updateUserById(user.id, {
-          password: bypassPassword,
-          phone_confirm: true,
-        });
-
-        if (updateError) {
-          return NextResponse.json(
-            { error: { message: `Bypass password update failed: ${updateError.message}` } },
-            { status: 400 }
-          );
-        }
       }
 
       if (!user) {
@@ -74,9 +98,24 @@ export async function POST(request: Request) {
         );
       }
 
-      // Authenticate cookies using standard client sign in with password
+      // 4. Update password and attach email credentials for phone-only users
+      const { error: updateError } = await adminSupabase.auth.admin.updateUserById(user.id, {
+        email: bypassEmail,
+        password: bypassPassword,
+        email_confirm: true,
+        phone_confirm: true,
+      });
+
+      if (updateError) {
+        return NextResponse.json(
+          { error: { message: `Bypass credential update failed: ${updateError.message}` } },
+          { status: 400 }
+        );
+      }
+
+      // Authenticate cookies using standard client sign in with email/password (since phone logins are disabled)
       const { error: signInError } = await supabase.auth.signInWithPassword({
-        phone: user.phone!,
+        email: bypassEmail,
         password: bypassPassword,
       });
 

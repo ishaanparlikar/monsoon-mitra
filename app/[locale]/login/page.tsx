@@ -1,14 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Phone, Droplet, Shield, AlertCircle } from 'lucide-react';
+import { Droplet, Shield, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { Input, PhoneInput } from '@/components/ui/Input';
+import { PhoneInput } from '@/components/ui/Input';
 import { Card, CardContent } from '@/components/ui/Card';
 
 export default function LoginPage() {
-  const router = useRouter();
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
@@ -111,8 +109,9 @@ export default function LoginPage() {
                   onBack={() => setStep('phone')}
                   onError={(msg) => setError(msg)}
                 />
-                <p className="text-center text-xs text-primary/80 font-medium pt-2">
-                  💡 Hint: Enter <code className="bg-primary/10 px-1.5 py-0.5 rounded font-mono font-bold">123456</code> to bypass verification.
+                <p className="text-center text-xs text-primary/80 font-medium pt-2 space-y-1 block">
+                  <span>💡 Hint: Enter <code className="bg-primary/10 px-1.5 py-0.5 rounded font-mono font-bold">123456</code> to bypass verification.</span>
+                  <span className="block text-muted-foreground font-normal">To view seeded demo data, use phone number: <code className="font-mono bg-muted px-1.5 py-0.5 rounded">9876543210</code>.</span>
                 </p>
               </div>
             )}
