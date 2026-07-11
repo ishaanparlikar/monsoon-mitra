@@ -1,0 +1,376 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Catppuccin Latte (Light Theme) */
+    --ctp-rosewater: #dc8a78;
+    --ctp-flamingo: #dd7878;
+    --ctp-pink: #ea76cb;
+    --ctp-mauve: #8839ef;
+    --ctp-red: #d20f39;
+    --ctp-maroon: #e64553;
+    --ctp-peach: #fe640b;
+    --ctp-yellow: #df8e1d;
+    --ctp-green: #40a02b;
+    --ctp-teal: #179299;
+    --ctp-sky: #04a5e5;
+    --ctp-sapphire: #209fb5;
+    --ctp-blue: #1e66f5;
+    --ctp-lavender: #7287fd;
+    --ctp-text: #4c4f69;
+    --ctp-subtext1: #5c5f77;
+    --ctp-subtext0: #9ca0b0;
+    --ctp-overlay2: #7c7f93;
+    --ctp-overlay1: #8c8fa1;
+    --ctp-overlay0: #9ca0b0;
+    --ctp-surface2: #acb0be;
+    --ctp-surface1: #bcc0cc;
+    --ctp-surface0: #ccd0da;
+    --ctp-base: #eff1f5;
+    --ctp-mantle: #e6e9ef;
+    --ctp-crust: #dce0e8;
+
+    /* Semantic aliases for light mode */
+    --background: var(--ctp-base);
+    --foreground: var(--ctp-text);
+    --primary: var(--ctp-blue);
+    --primary-foreground: #ffffff;
+    --secondary: var(--ctp-green);
+    --secondary-foreground: #ffffff;
+    --danger: var(--ctp-red);
+    --danger-foreground: #ffffff;
+    --warning: var(--ctp-yellow);
+    --warning-foreground: #ffffff;
+    --success: var(--ctp-green);
+    --success-foreground: #ffffff;
+    --info: var(--ctp-sky);
+    --info-foreground: #ffffff;
+    --border: var(--ctp-surface0);
+    --border-strong: var(--ctp-surface2);
+    --surface: var(--ctp-surface0);
+    --surface-elevated: var(--ctp-base);
+    --muted: var(--ctp-subtext0);
+    --ring: var(--ctp-blue);
+  }
+
+  .dark {
+    /* Catppuccin Mocha (Dark Theme) */
+    --ctp-rosewater: #f5e0dc;
+    --ctp-flamingo: #f2cdcd;
+    --ctp-pink: #f5c2e7;
+    --ctp-mauve: #cba6f7;
+    --ctp-red: #f38ba8;
+    --ctp-maroon: #eba0ac;
+    --ctp-peach: #fab387;
+    --ctp-yellow: #f9e2af;
+    --ctp-green: #a6e3a1;
+    --ctp-teal: #94e2d5;
+    --ctp-sky: #89dceb;
+    --ctp-sapphire: #74c7ec;
+    --ctp-blue: #89b4fa;
+    --ctp-lavender: #b4befe;
+    --ctp-text: #cdd6f4;
+    --ctp-subtext1: #bac2de;
+    --ctp-subtext0: #a6adc8;
+    --ctp-overlay2: #9399b2;
+    --ctp-overlay1: #7f849c;
+    --ctp-overlay0: #6c7086;
+    --ctp-surface2: #585b70;
+    --ctp-surface1: #45475a;
+    --ctp-surface0: #313244;
+    --ctp-base: #1e1e2e;
+    --ctp-mantle: #181825;
+    --ctp-crust: #11111b;
+
+    /* Semantic aliases for dark mode */
+    --background: var(--ctp-base);
+    --foreground: var(--ctp-text);
+    --primary: var(--ctp-blue);
+    --primary-foreground: #1e1e2e;
+    --secondary: var(--ctp-green);
+    --secondary-foreground: #1e1e2e;
+    --danger: var(--ctp-red);
+    --danger-foreground: #1e1e2e;
+    --warning: var(--ctp-yellow);
+    --warning-foreground: #1e1e2e;
+    --success: var(--ctp-green);
+    --success-foreground: #1e1e2e;
+    --info: var(--ctp-sky);
+    --info-foreground: #1e1e2e;
+    --border: var(--ctp-surface0);
+    --border-strong: var(--ctp-surface2);
+    --surface: var(--ctp-surface0);
+    --surface-elevated: var(--ctp-mantle);
+    --muted: var(--ctp-subtext0);
+    --ring: var(--ctp-blue);
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-feature-settings:
+      'rlig' 1,
+      'calt' 1;
+  }
+}
+
+@layer utilities {
+  /* Safe area insets for mobile devices */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .safe-left {
+    padding-left: env(safe-area-inset-left);
+  }
+  .safe-right {
+    padding-right: env(safe-area-inset-right);
+  }
+  .safe-all {
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom)
+      env(safe-area-inset-left);
+  }
+
+  /* Touch target minimum sizes */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .touch-target-lg {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  /* Focus visible styles */
+  .focus-visible-ring:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  /* Scrollbar hiding */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Text clamp utilities */
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Animation utilities */
+  .animate-in {
+    animation: animateIn 0.3s ease-out;
+  }
+  .animate-out {
+    animation: animateOut 0.2s ease-in;
+  }
+  @keyframes animateIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes animateOut {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+
+  /* PWA specific styles */
+  @media (display-mode: standalone) {
+    .pwa-hide {
+      display: none !important;
+    }
+    .pwa-safe-top {
+      padding-top: env(safe-area-inset-top);
+    }
+    .pwa-safe-bottom {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+  }
+
+  /* Print styles */
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .focus-visible-ring:focus-visible {
+      @apply ring-4 ring-offset-4;
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Rain-channel progress bar - monsoon theme */
+  .rain-channel {
+    position: relative;
+    background: linear-gradient(180deg, var(--ctp-surface1) 0%, var(--ctp-surface2) 100%);
+    border-radius: 4px;
+    overflow: hidden;
+    height: 12px;
+  }
+
+  .rain-channel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(168, 216, 255, 0.6), transparent);
+    animation: waterSurface 2s ease-in-out infinite;
+  }
+
+  @keyframes waterSurface {
+    0%,
+    100% {
+      transform: translateX(-100%);
+    }
+    50% {
+      transform: translateX(100%);
+    }
+  }
+
+  .rain-fill {
+    height: 100%;
+    background: linear-gradient(180deg, var(--ctp-sky) 0%, var(--ctp-blue) 100%);
+    border-radius: 4px 0 0 4px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .rain-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.4) 0%,
+      transparent 50%,
+      rgba(255, 255, 255, 0.2) 100%
+    );
+    opacity: 0.7;
+  }
+
+  /* Monsoon cloud shadows */
+  .cloud-shadow {
+    box-shadow:
+      0 10px 25px -5px rgba(76, 79, 105, 0.08),
+      0 4px 10px -4px rgba(76, 79, 105, 0.06);
+  }
+
+  .dark .cloud-shadow {
+    box-shadow:
+      0 10px 25px -5px rgba(24, 24, 37, 0.3),
+      0 4px 10px -4px rgba(24, 24, 37, 0.2);
+  }
+
+  /* Water droplet animation for completed actions */
+  .water-drip {
+    position: relative;
+  }
+
+  .water-drip::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    width: 4px;
+    height: 6px;
+    background: var(--ctp-green);
+    border-radius: 50%;
+    opacity: 0;
+    transform: translateX(-50%) scale(0);
+  }
+
+  .water-drip.animate::after {
+    animation: drip 0.4s ease-out;
+  }
+
+  @keyframes drip {
+    0% {
+      opacity: 0.8;
+      transform: translateX(-50%) scale(1);
+      bottom: -4px;
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(-50%) scale(0.8);
+      bottom: -12px;
+    }
+  }
+}
+
+/* Desktop mode layout */
+@media (min-width: 1024px) {
+  .desktop-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .desktop-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .desktop-sidebar {
+    position: sticky;
+    top: 5rem;
+  }
+}

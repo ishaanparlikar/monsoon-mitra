@@ -1,0 +1,62 @@
+{
+  "name": "Monsoon Mitra",
+  "short_name": "Monsoon Mitra",
+  "description": "Your Monsoon Preparedness Companion for Mumbai Suburban",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f0f9ff",
+  "theme_color": "#0ea5e9",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["weather", "safety", "utilities"],
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "My Plan",
+      "short_name": "Plan",
+      "description": "View your personalized preparedness plan",
+      "url": "/plan"
+    },
+    {
+      "name": "Weather Alerts",
+      "short_name": "Alerts",
+      "description": "View weather alerts for your area",
+      "url": "/alerts"
+    },
+    {
+      "name": "Shelters",
+      "short_name": "Shelters",
+      "description": "Find emergency shelters near you",
+      "url": "/shelters"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+monsoon",
+      "url": "/?action=%s"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "@typescript-eslint/no-explicit-any": "warn",
+    "react/no-unescaped-entities": "off",
+    "@typescript-eslint/consistent-type-imports": "off",
+    "@typescript-eslint/consistent-type-exports": "off"
+  },
+  "ignorePatterns": [".next/", "node_modules/", "*.config.js", "*.config.ts"]
+}

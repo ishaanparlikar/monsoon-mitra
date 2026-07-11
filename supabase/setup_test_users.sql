@@ -1,0 +1,45 @@
+-- Monsoon Assistant: Setup Test Auth Users
+-- =============================================================================
+-- Run this FIRST before seed.sql
+-- Creates auth.users that the seed data references via FK.
+-- Options to run (pick one):
+--
+-- OPTION A — Supabase Dashboard (easiest):
+--   1. Go to: Dashboard > Authentication > Users
+--   2. Click "Add User" (+)
+--   3. Enter phone +919876543210, leave other fields
+--   4. Click "Create User"
+--   5. Repeat for all phones in the list below
+--
+-- OPTION B — Via Supabase Admin REST API (scriptable):
+--   export SERVICE_KEY="your-service-role-key"
+--   export REF="your-project-ref"
+--   for phone in +919876543210 +919876543211 +919876543212 \
+--               +919876543213 +919876543214 +919876543215 \
+--               +919876543216 +919876543217 +919876543218 \
+--               +919876543219 +919876543220; do
+--     curl -X POST "https://$REF.supabase.co/auth/v1/admin/users" \
+--       -H "Authorization: Bearer $SERVICE_KEY" \
+--       -H "apikey: $SERVICE_KEY" \
+--       -H "Content-Type: application/json" \
+--       -d "{\"phone\": \"$phone\"}"
+--   done
+--
+-- OPTION C — Via Supabase CLI (if CLI installed):
+--   supabase users create --phone +919876543210
+--
+-- Auth users to create (phone → matching UUID in seed.sql):
+-- +919876543210 → a0000000-0000-0000-0000-000000000001  (Family 1 primary, Hindi)
+-- +919876543211 → a0000000-0000-0000-0000-000000000002  (Family 2 primary, Marathi)
+-- +919876543212 → a0000000-0000-0000-0000-000000000003  (Family 1 child, English)
+-- +919876543213 → a0000000-0000-0000-0000-000000000004  (Family 1 elderly parent, Gujarati)
+-- +919876543214 → a0000000-0000-0000-0000-000000000005  (Family 4 primary, English)
+-- +919876543215 → a0000000-0000-0000-0000-000000000006  (Family 4 spouse, English)
+-- +919876543216 → a0000000-0000-0000-0000-000000000007  (Family 5 spouse, English)
+-- +919876543217 → a0000000-0000-0000-0000-000000000008  (Family 5 child, English)
+-- +919876543218 → a0000000-0000-0000-0000-000000000009  (Family 3 spouse, Marathi)
+-- +919876543219 → a0000000-0000-0000-0000-000000000010  (Family 2 spouse, Marathi)
+-- +919876543220 → a0000000-0000-0000-0000-000000000011  (Family 3 child, English)
+--
+-- After creating users, run: supabase/seed.sql
+-- =============================================================================

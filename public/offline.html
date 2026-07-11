@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Offline - Monsoon Mitra</title>
+    <meta name="theme-color" content="#0ea5e9" />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 20px;
+        background: linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 100%);
+        color: #0f172a;
+        text-align: center;
+      }
+      .icon {
+        font-size: 80px;
+        margin-bottom: 20px;
+        animation: pulse 2s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+      h1 {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: #0ea5e9;
+      }
+      p {
+        font-size: 16px;
+        color: #475569;
+        margin-bottom: 28px;
+        max-width: 360px;
+        line-height: 1.6;
+      }
+      .features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        margin-bottom: 28px;
+      }
+      .feature {
+        background: white;
+        border: 1px solid #bae6fd;
+        border-radius: 12px;
+        padding: 16px 20px;
+        min-width: 140px;
+        box-shadow: 0 2px 8px rgba(14, 165, 233, 0.1);
+      }
+      .feature-icon {
+        font-size: 24px;
+        margin-bottom: 8px;
+      }
+      .feature-title {
+        font-weight: 600;
+        font-size: 14px;
+        color: #0369a1;
+      }
+      .actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      button {
+        padding: 14px 28px;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-width: 140px;
+      }
+      .btn-primary {
+        background: #0ea5e9;
+        color: white;
+      }
+      .btn-primary:hover {
+        background: #0284c7;
+        transform: translateY(-1px);
+      }
+      .btn-secondary {
+        background: white;
+        color: #0ea5e9;
+        border: 2px solid #0ea5e9;
+      }
+      .btn-secondary:hover {
+        background: #f0f9ff;
+      }
+      .btn-emergency {
+        background: #ef4444;
+        color: white;
+      }
+      .btn-emergency:hover {
+        background: #dc2626;
+        transform: translateY(-1px);
+      }
+      .offline-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: #fef3c7;
+        border: 1px solid #fcd34d;
+        border-radius: 20px;
+        font-size: 13px;
+        color: #92400e;
+        margin-bottom: 20px;
+      }
+      .offline-dot {
+        width: 8px;
+        height: 8px;
+        background: #f59e0b;
+        border-radius: 50%;
+        animation: blink 1s ease-in-out infinite;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="offline-indicator">
+      <span class="offline-dot"></span>
+      <span>You're Offline</span>
+    </div>
+
+    <div class="icon">🌧️</div>
+    <h1>Monsoon Mitra</h1>
+    <p>You're currently offline, but your critical preparedness data is cached and accessible.</p>
+
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">📋</div>
+        <div class="feature-title">My Plan</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">✅</div>
+        <div class="feature-title">Checklist</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🚨</div>
+        <div class="feature-title">Alerts</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🏠</div>
+        <div class="feature-title">Shelters</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🛣️</div>
+        <div class="feature-title">Routes</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">📞</div>
+        <div class="feature-title">Contacts</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-primary" onclick="window.location.reload()">Try Reconnecting</button>
+      <button class="btn-secondary" onclick="window.location.href = '/plan'">View My Plan</button>
+      <button class="btn-emergency" onclick="window.location.href = '/sos'">SOS Emergency</button>
+    </div>
+
+    <script>
+      // Register for background sync when online
+      if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
+        navigator.serviceWorker.ready.then((reg) => {
+          reg.sync.register('sync-data').catch(() => {});
+        });
+      }
+
+      // Listen for online event
+      window.addEventListener('online', () => {
+        document.querySelector('.offline-indicator').innerHTML = `
+        <span class="offline-dot" style="background: #22c55e; animation: none;"></span>
+        <span>Back Online - Syncing...</span>
+      `;
+        setTimeout(() => window.location.reload(), 1500);
+      });
+
+      // Check if we have cached data
+      if ('caches' in window) {
+        caches.open('monsoon-offline-v1').then((cache) => {
+          cache.keys().then((keys) => {
+            console.log('Cached offline resources:', keys.length);
+          });
+        });
+      }
+    </script>
+  </body>
+</html>
