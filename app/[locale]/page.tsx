@@ -18,16 +18,21 @@ export default async function DashboardPage() {
     .eq('primary_member', session.user.id)
     .single<{ id: string; district: string | null }>();
 
-  if (!familyProfile) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-muted">No family profile found. Please contact support.</p>
-      </div>
-    );
-  }
+  // HACKATHON: fallback to first family if no family linked to user
+  let familyId: string | null = familyProfile?.id ?? null;
+  let district = familyProfile?.district || 'Mumbai Suburban';
 
-  const familyId = familyProfile.id;
-  const district = familyProfile.district || 'Mumbai Suburban';
+  if (!familyId) {
+    const { data: firstFamily } = await supabase
+      .from('families')
+      .select('id, district')
+      .limit(1)
+      .single<{ id: string; district: string | null }>();
+    if (firstFamily) {
+      familyId = firstFamily.id;
+      district = firstFamily.district || 'Mumbai Suburban';
+    }
+  }
 
   let plan = null;
   let checklist: any[] = [];

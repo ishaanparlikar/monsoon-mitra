@@ -17,15 +17,8 @@ export default async function AlertsPage() {
     .eq('primary_member', session.user.id)
     .single<{ id: string; district: string | null }>();
 
-  if (!familyProfile) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-muted">No family profile found. Please contact support.</p>
-      </div>
-    );
-  }
-
-  const district = familyProfile.district || 'Mumbai Suburban';
+  // HACKATHON: use family district or fallback to Mumbai Suburban
+  const district = familyProfile?.district || 'Mumbai Suburban';
   const alerts = await getActiveAlerts(district);
 
   return <AlertsUI alerts={alerts} />;
